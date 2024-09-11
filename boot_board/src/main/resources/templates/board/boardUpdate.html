@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="text-center">
+		<form name="updateForm" th:object="${board}">
+		<h3>게시물 수정</h3>
+		<table class="table">
+			
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="title"></td>
+			</tr>
+			
+			<tr>
+				<th>작성자</th>
+				<td><input type="text" name="writer" th:value="${board.writer}" readonly></td>
+			</tr>
+			
+			<tr>
+				<th>내용</th>
+				<td height="100px" width="200px">
+				<textarea name="contents"></textarea>
+				</td>
+			</tr>
+			
+			<tr>
+				<th>첨부파일</th>
+				<!-- /images/cat.jpg -->
+				<td><input type="text" name="image"></td>
+			</tr>
+			
+			<tr>
+				<th>작성일자</th> <!-- yyy/MM/dd -->
+				<td><input type="text" name="regdate" placeholder="yyyy/MM/dd"></td>
+			</tr>
+		</table>
+		
+			<button type="submit" id="updateBtn">저장</button>
+		
+		</form>
+	</div>
+	
+	<script>
+		$('#updateBtn').on('click', updateAjax);
+		
+		function updateAjax(event) {
+		 // 1) 보낼 데이터 가져오기
+		 let dataObj = getFormData();
+		 // 2) AJAX
+		 $.ajax("boardUpdate", {
+		 	type : 'post', // method
+		 	// data : dataObj
+		 	
+		 	// JSON: @RequestBody
+		 	contentType : 'application/json',
+		 	data : JSON.stringify(dataObj)
+		 })
+		 .done((data) => {
+			 if(data.result) {
+				 alert('성공적으로 수정되었습니다.');
+			 } else {
+				 alert('수정되지 않았습니다');
+			 }
+		})
+		 .fail((err)=>console.log(err)); 
+		}
+		
+		function getFormData() {
+		  
+		  let formAry = $('form[name="updateForm"]').serializeArray();
+		  
+		  /*
+		  [	{ name : "employeeId", value : "100"},
+		  	{ name : "lastName", value : "King"},
+		  	... ]
+		  */
+		  
+		  /* {"employeeId" : 100, "lastName" : "King", ...} */
+		  let formObj = {};
+		  $.each(formAry, function(idx, tag){
+			  // tag) {name : "employeeId", value : "100"}
+		  	  formObj[tag.name] = tag.value;
+		  	  // formObj["employeeId"] = "100";
+		  });
+		  
+		  return formObj; /* {"employeeId" : 100, "lastName" : "King",} */
+		  
+		}
+	</script>
+	
+</body>
+</html>

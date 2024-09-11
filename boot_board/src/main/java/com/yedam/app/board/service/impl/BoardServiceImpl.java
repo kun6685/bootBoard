@@ -1,5 +1,8 @@
 package com.yedam.app.board.service.impl;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,20 +35,43 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int insertBoard(BoardVO boardVO) {
+	public int boardInsert(BoardVO boardVO) {
 		int result = boardMapper.insertBoardInfo(boardVO);
 		return result == 1 ? boardVO.getBno() : -1;
 	}
 
 	@Override
-	public Map<String, Object> updateBoard(BoardVO boardVO) {
-		return null;
+	public Map<String, Object> boardUpdate(BoardVO boardVO) {
+		Map<String, Object> map = new HashMap<>();
+		boolean isSuccessed = false;
+		
+		int result = boardMapper.updateBoardInfo(boardVO);
+		if(result == 1) {
+			isSuccessed = true;
+		}
+		
+		String updateDate = getUpdateDate();
+		
+		map.put("date", updateDate);
+		map.put("result", isSuccessed);
+		map.put("target", boardVO);
+		
+		return map;
+	}
+	
+	private String getUpdateDate() {
+		LocalDate today = LocalDate.now();
+		DateTimeFormatter dtFormat 
+			= DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		String updateDate = today.format(dtFormat);
+		
+		return updateDate;
 	}
 
+	
 	@Override
-	public int deleteBoard(int boardNO) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int boardDelete(int boardNO) {
+		return boardMapper.deleteBoardInfo(boardNO);
 	}
 
 }

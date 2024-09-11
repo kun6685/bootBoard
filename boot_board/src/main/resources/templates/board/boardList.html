@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{common/layouts/default_layout}"
+	  layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div class="text-center">
+		<h3>게시판 목록</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>제목</th>
+					<th>작성자</th>
+					<th>작성일</th> <!-- yyyy년 MM월 dd일 -->
+				</tr>
+			</thead>
+			
+			<tbody>
+				<th:block th:each="board : ${boards}">
+				<tr>
+					<td>[[${board.bno}]]</td>
+					<td>[[${board.title}]]</td>
+					<td>[[${board.writer}]]</td>
+					<td>[[${#dates.format(board.regdate, "yyyy년 MM월 dd일")}]]</td>
+				</tr>
+				</th:block>
+			</tbody>
+		</table>
+	</div>
+	
+	<script>
+		$('tbody > tr').on('click', function(event) {
+			let trTag = event.currentTarget;
+			let bno = $(trTag).children().first().text();
+			let url = '/boardInfo?bno=' + bno;
+			location.href = url;
+		});
+	</script>
+	
+</body>
+</html>

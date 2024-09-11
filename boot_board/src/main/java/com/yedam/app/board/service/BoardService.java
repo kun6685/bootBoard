@@ -12,12 +12,12 @@ public interface BoardService {
 	public BoardVO boardInfo(BoardVO boardVO);
 	
 	// 등록
-	public int insertBoard(BoardVO boardVO);
+	public int boardInsert(BoardVO boardVO);
 	
 	// 수정
-	public Map<String, Object> updateBoard(BoardVO boardVO);
+	public Map<String, Object> boardUpdate(BoardVO boardVO);
 	
 	// 삭제
-	public int deleteBoard(int boardNO);
+	public int boardDelete(int boardNO);
 	
 }
